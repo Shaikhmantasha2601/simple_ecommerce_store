@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Shopping Cart | ShopNest{% endblock %}
+
+{% block content %}
+<section class="container page-section">
+    <div class="page-heading">
+        <span class="eyebrow">YOUR SHOPPING CART</span>
+        <h1>Shopping Cart</h1>
+    </div>
+
+    {% if items %}
+    <div class="cart-layout">
+        <div class="cart-items">
+            {% for item in items %}
+            <div class="cart-item">
+                <div class="cart-thumb">
+                    {% if item.product.image_url %}
+                        <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}">
+                    {% else %}🛒{% endif %}
+                </div>
+                <div class="cart-main">
+                    <span class="category-label">{{ item.product.category }}</span>
+                    <h3>{{ item.product.name }}</h3>
+                    <p>₹{{ item.product.price }} each</p>
+                </div>
+                <form method="post" action="{% url 'update_cart' item.product.id %}" class="cart-quantity">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" min="0" max="{{ item.product.stock }}" value="{{ item.quantity }}">
+                    <button type="submit">Update</button>
+                </form>
+                <strong class="cart-subtotal">₹{{ item.subtotal }}</strong>
+                <a class="remove-link" href="{% url 'remove_from_cart' item.product.id %}">Remove</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <aside class="summary-card">
+            <h2>Order Summary</h2>
+            <div class="summary-row"><span>Items</span><span>{{ items|length }}</span></div>
+            <div class="summary-row"><span>Shipping</span><span>Free</span></div>
+            <hr>
+            <div class="summary-total"><span>Total</span><strong>₹{{ total }}</strong></div>
+            {% if user.is_authenticated %}
+                <a class="primary-btn full" href="{% url 'checkout' %}">Proceed to Checkout</a>
+            {% else %}
+                <a class="primary-btn full" href="{% url 'login' %}?next={% url 'checkout' %}">Login to Checkout</a>
+                <p class="small-note">You need an account to place an order.</p>
+            {% endif %}
+        </aside>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div>🛒</div>
+        <h2>Your cart is empty</h2>
+        <p>Add some products and they will appear here.</p>
+        <a class="primary-btn" href="{% url 'home' %}">Start Shopping</a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

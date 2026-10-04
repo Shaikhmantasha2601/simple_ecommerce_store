@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmed | ShopNest{% endblock %}
+
+{% block content %}
+<section class="container page-section">
+    <div class="success-card">
+        <div class="success-icon">✓</div>
+        <span class="eyebrow">ORDER CONFIRMED</span>
+        <h1>Thank you for your order!</h1>
+        <p>Your order <strong>#{{ order.id }}</strong> has been placed successfully.</p>
+        <div class="success-details">
+            <div><span>Total</span><strong>₹{{ order.total_amount }}</strong></div>
+            <div><span>Status</span><strong>{{ order.status }}</strong></div>
+            <div><span>Delivery to</span><strong>{{ order.city }} - {{ order.pincode }}</strong></div>
+        </div>
+        <div class="button-row">
+            <a class="primary-btn" href="{% url 'my_orders' %}">View My Orders</a>
+            <a class="secondary-btn" href="{% url 'home' %}">Continue Shopping</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

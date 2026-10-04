@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}My Orders | ShopNest{% endblock %}
+
+{% block content %}
+<section class="container page-section">
+    <div class="page-heading">
+        <span class="eyebrow">ACCOUNT</span>
+        <h1>My Orders</h1>
+    </div>
+
+    {% if orders %}
+    <div class="orders-list">
+        {% for order in orders %}
+        <article class="order-card">
+            <div class="order-head">
+                <div>
+                    <span class="category-label">Order #{{ order.id }}</span>
+                    <h2>{{ order.created_at|date:"d M Y, h:i A" }}</h2>
+                </div>
+                <span class="status">{{ order.status }}</span>
+            </div>
+            <div class="order-items">
+                {% for item in order.items.all %}
+                    <div><span>{{ item.product.name }} × {{ item.quantity }}</span><strong>₹{{ item.subtotal }}</strong></div>
+                {% endfor %}
+            </div>
+            <div class="order-total">Total: <strong>₹{{ order.total_amount }}</strong></div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div>📦</div>
+        <h2>No orders yet</h2>
+        <p>Your placed orders will appear here.</p>
+        <a class="primary-btn" href="{% url 'home' %}">Shop Now</a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
